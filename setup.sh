@@ -32,6 +32,7 @@ echo "Downloading GRDB..."
 git clone --quiet --depth 1 --branch "${GRDB_VERSION}" \
     https://github.com/groue/GRDB.swift.git "${TEMP}/grdb"
 cp -R "${TEMP}/grdb/GRDB/." Sources/GRDB/
+cp "${TEMP}/grdb/LICENSE" Sources/GRDB/LICENSE
 
 echo "Downloading SQLite..."
 curl -sL "https://www.sqlite.org/${SQLITE_YEAR}/sqlite-amalgamation-${SQLITE_VERSION}.zip" \
@@ -46,6 +47,7 @@ echo "Downloading SQLiteData..."
 git clone --quiet --depth 1 --branch "${SQLITEDATA_VERSION}" \
     https://github.com/pointfreeco/sqlite-data.git "${TEMP}/sqlitedata"
 cp -R "${TEMP}/sqlitedata/Sources/SQLiteData/." Sources/SQLiteData/
+cp "${TEMP}/sqlitedata/LICENSE" Sources/SQLiteData/LICENSE
 rm -rf Sources/SQLiteData/CloudKit Sources/SQLiteData/Documentation.docc 2>/dev/null || true
 
 cp "${TEMPLATES_DIR}/shim.h" Sources/SQLiteCustom/
