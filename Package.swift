@@ -8,7 +8,7 @@ let package = Package(
         .iOS(.v13),
         .macOS(.v10_15),
         .tvOS(.v13),
-        .watchOS(.v6)
+        .watchOS(.v6),
     ],
     products: [
         .library(name: "GRDB", targets: ["GRDB"]),
@@ -55,12 +55,12 @@ let package = Package(
                 .define("SQLITE_OMIT_TCL_VARIABLE"),
                 .define("SQLITE_HAVE_ISNAN"),
                 .define("SQLITE_HAVE_LOCALTIME_R"),
-				.define("SQLITE_HAVE_MALLOC_USABLE_SIZE"),
+                .define("SQLITE_HAVE_MALLOC_USABLE_SIZE"),
                 .define("SQLITE_HAVE_STRCHRNUL"),
                 .define("SQLITE_ENABLE_GEOPOLY"),
                 .define("SQLITE_STAT4_SAMPLES", to: "64"),
                 .define("NDEBUG", .when(configuration: .release)),
-                .unsafeFlags(["-Wno-ambiguous-macro", "-O3"])
+                .unsafeFlags(["-Wno-ambiguous-macro", "-O3"]),
             ],
         ),
         .target(
@@ -73,14 +73,20 @@ let package = Package(
                 .define("SQLITE_ENABLE_FTS5"),
                 .define("SQLITE_ENABLE_PREUPDATE_HOOK"),
                 .define("GRDBCUSTOMSQLITE"),
-                .unsafeFlags(["-O"])
+                .unsafeFlags(["-O"]),
             ]
         ),
         .target(
             name: "SQLiteExtensions",
             dependencies: ["GRDBSQLite"],
             path: "Sources/SQLiteExtensions",
-            exclude: ["sqlean/LICENSE", "usearch/LICENSE", "usearch/stringzilla/LICENSE", "usearch/simsimd/LICENSE", "usearch/fp16/LICENSE"],
+            exclude: [
+                "sqlean/LICENSE",
+                "usearch/LICENSE",
+                "usearch/stringzilla/LICENSE",
+                "usearch/simsimd/LICENSE",
+                "usearch/fp16/LICENSE",
+            ],
             sources: [
                 "initialize-extensions.c",
                 "sqlean/sqlite3-uuid.c",
@@ -101,7 +107,7 @@ let package = Package(
                 .headerSearchPath("sqlean/text"),
                 .headerSearchPath("sqlean/text/utf8"),
                 .define("SQLITE_CORE"),
-                .unsafeFlags(["-O3"])
+                .unsafeFlags(["-O3"]),
             ],
             cxxSettings: [
                 .headerSearchPath("include"),
@@ -129,7 +135,7 @@ let package = Package(
             path: "Sources/SQLiteData",
             exclude: ["LICENSE"],
             swiftSettings: [.unsafeFlags(["-O"])]
-        )
+        ),
     ],
     cLanguageStandard: .c11,
     cxxLanguageStandard: .cxx17
