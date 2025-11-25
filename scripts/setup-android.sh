@@ -76,6 +76,11 @@ else
     echo "  Patched successfully"
 fi
 
+# Patch library name from sqlite3x to sqlite3
+echo "Patching library name..."
+SQLITE_DB_FILE="$ANDROID_DIR/sqlite-android/src/main/java/io/requery/android/database/sqlite/SQLiteDatabase.java"
+sed -i '' 's/LIBRARY_NAME = "sqlite3x"/LIBRARY_NAME = "sqlite3"/' "$SQLITE_DB_FILE"
+
 # Patch build.gradle
 echo "Patching build.gradle..."
 BUILD_GRADLE="$ANDROID_DIR/sqlite-android/build.gradle"

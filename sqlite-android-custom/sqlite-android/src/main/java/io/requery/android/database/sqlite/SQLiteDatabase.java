@@ -85,7 +85,7 @@ public final class SQLiteDatabase extends SQLiteClosable implements SupportSQLit
     /**
      * Name of the compiled native library.
      */
-    public static final String LIBRARY_NAME = "sqlite3x";
+    public static final String LIBRARY_NAME = "sqlite3";
     static {
         System.loadLibrary(LIBRARY_NAME);
     }

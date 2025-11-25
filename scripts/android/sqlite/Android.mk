@@ -88,7 +88,7 @@ LOCAL_C_INCLUDES += \
 # Export include path so usearch can find sqlite3ext.h
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 
-LOCAL_MODULE := libsqlite3x
+LOCAL_MODULE := libsqlite3
 LOCAL_LDLIBS += -ldl -llog -latomic
 
 include $(BUILD_SHARED_LIBRARY)
