@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "GRDB",
+    name: "SQLiteDataCustom",
     platforms: [
         .iOS(.v13),
         .macOS(.v10_15),
@@ -31,7 +31,6 @@ let package = Package(
             publicHeadersPath: ".",
             cSettings: [
                 .define("SQLITE_ENABLE_SNAPSHOT"),
-                .define("SQLITE_ENABLE_SESSION"),
                 .define("SQLITE_ENABLE_FTS5"),
                 .define("SQLITE_ENABLE_PREUPDATE_HOOK"),
                 .define("SQLITE_ENABLE_RTREE"),
@@ -61,6 +60,7 @@ let package = Package(
 				.define("SQLITE_HAVE_LOCALTIME_S"),
 				.define("SQLITE_HAVE_MALLOC_USABLE_SIZE"),
                 .define("SQLITE_HAVE_STRCHRNUL"),
+                .define("SQLITE_ENABLE_GEOPOLY"),
                 .define("NDEBUG", .when(configuration: .release)),
                 .unsafeFlags(["-Wno-ambiguous-macro"])
             ],
