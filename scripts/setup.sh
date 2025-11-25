@@ -7,13 +7,14 @@ SQLITE_VERSION="${SQLITE_VERSION:-3510000}"
 SQLITE_YEAR="${SQLITE_YEAR:-2025}"
 SQLITEDATA_VERSION="${SQLITEDATA_VERSION:-1.3.0}"
 USEARCH_VERSION="${USEARCH_VERSION:-v2.21.3}"
-OUTPUT_DIR="${1:-.}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-TEMPLATES_DIR="${SCRIPT_DIR}/templates"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+OUTPUT_DIR="${1:-$ROOT_DIR}"
+TEMPLATES_DIR="${SCRIPT_DIR}/ios"
 
 if [ ! -d "${TEMPLATES_DIR}" ]; then
-    echo "Error: templates/ directory not found at ${TEMPLATES_DIR}"
+    echo "Error: ios/ templates directory not found at ${TEMPLATES_DIR}"
     exit 1
 fi
 
@@ -72,3 +73,7 @@ cp "${TEMPLATES_DIR}/shim.h" Sources/SQLiteCustom/
 cp "${TEMPLATES_DIR}/GRDBSQLite.h" Sources/SQLiteCustom/
 cp "${TEMPLATES_DIR}/SQLiteExtensions/initialize-extensions.c" Sources/SQLiteExtensions/
 cp "${TEMPLATES_DIR}/SQLiteExtensions/include/initialize-extensions.h" Sources/SQLiteExtensions/include/
+
+echo ""
+echo "Setting up Android build..."
+"${SCRIPT_DIR}/setup-android.sh"
