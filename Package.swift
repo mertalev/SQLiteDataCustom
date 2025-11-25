@@ -13,7 +13,8 @@ let package = Package(
     products: [
         .library(name: "GRDB", targets: ["GRDB"]),
         .library(name: "SQLiteExtensions", targets: ["SQLiteExtensions"]),
-        .library(name: "SQLiteData", targets: ["SQLiteData"])
+        .library(name: "SQLiteData", targets: ["SQLiteData"]),
+        .library(name: "USearchExtension", targets: ["USearchExtension"])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-collections", from: "1.0.0"),
@@ -69,7 +70,7 @@ let package = Package(
             name: "GRDB",
             dependencies: ["GRDBSQLite"],
             path: "Sources/GRDB",
-            exclude: ["Documentation.docc", "PrivacyInfo.xcprivacy"],
+            exclude: ["Documentation.docc", "PrivacyInfo.xcprivacy", "LICENSE"],
             swiftSettings: [
                 .define("SQLITE_ENABLE_SNAPSHOT"),
                 .define("SQLITE_ENABLE_FTS5"),
@@ -79,7 +80,7 @@ let package = Package(
         ),
         .target(
             name: "SQLiteExtensions",
-            dependencies: ["GRDBSQLite"],
+            dependencies: ["GRDBSQLite", "USearchExtension"],
             path: "Sources/SQLiteExtensions",
             publicHeadersPath: "include",
             cSettings: [.define("SQLITE_CORE", to: "1")]
@@ -96,12 +97,31 @@ let package = Package(
                 .product(name: "StructuredQueriesSQLite", package: "swift-structured-queries"),
             ],
             path: "Sources/SQLiteData",
+            exclude: ["LICENSE"],
             swiftSettings: [
                 .define("SQLITE_ENABLE_SNAPSHOT"),
                 .define("SQLITE_ENABLE_FTS5"),
                 .define("SQLITE_ENABLE_PREUPDATE_HOOK")
             ]
+        ),
+        .target(
+            name: "USearchExtension",
+            dependencies: ["GRDBSQLite"],
+            path: "Sources/USearchExtension",
+            exclude: ["LICENSE", "stringzilla/LICENSE", "simsimd/LICENSE", "fp16/LICENSE"],
+            sources: ["lib.cpp", "stringzilla/c/lib.c"],
+            publicHeadersPath: "include",
+            cxxSettings: [
+                .headerSearchPath("include"),
+                .headerSearchPath("stringzilla/include"),
+                .headerSearchPath("simsimd/include"),
+                .headerSearchPath("fp16/include"),
+                .define("SQLITE_CORE"),
+                .define("USEARCH_USE_SIMSIMD", to: "1"),
+                .define("USEARCH_USE_FP16LIB", to: "1")
+            ]
         )
     ],
-    cLanguageStandard: .c11
+    cLanguageStandard: .c11,
+    cxxLanguageStandard: .cxx17
 )
