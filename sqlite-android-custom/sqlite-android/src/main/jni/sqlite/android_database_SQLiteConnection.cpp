@@ -1084,14 +1084,20 @@ extern int register_android_database_CursorWindow(JNIEnv *env);
 // USearch extension init function (defined in usearch/lib.cpp)
 extern "C" int sqlite3_usearch_sqlite_init(sqlite3*, char**, const sqlite3_api_routines*);
 
+// SQLean extension init functions (defined in sqlean/)
+extern "C" int sqlite3_uuid_init(sqlite3*, char**, const sqlite3_api_routines*);
+extern "C" int sqlite3_text_init(sqlite3*, char**, const sqlite3_api_routines*);
+
 extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   JNIEnv *env = 0;
 
   android::gpJavaVM = vm;
   vm->GetEnv((void**)&env, JNI_VERSION_1_4);
 
-  // Register USearch extension to be auto-loaded for all connections
+  // Register extensions to be auto-loaded for all connections
   sqlite3_auto_extension((void(*)(void))sqlite3_usearch_sqlite_init);
+  sqlite3_auto_extension((void(*)(void))sqlite3_uuid_init);
+  sqlite3_auto_extension((void(*)(void))sqlite3_text_init);
 
   android::register_android_database_SQLiteConnection(env);
   android::register_android_database_SQLiteDebug(env);

@@ -76,7 +76,16 @@ LOCAL_SRC_FILES := \
 	JNIHelp.cpp \
 	JNIString.cpp \
 	sqlite3.c \
-	../usearch/lib.cpp
+	../usearch/lib.cpp \
+	../sqlean/sqlite3-uuid.c \
+	../sqlean/uuid/extension.c \
+	../sqlean/sqlite3-text.c \
+	../sqlean/text/bstring.c \
+	../sqlean/text/rstring.c \
+	../sqlean/text/runes.c \
+	../sqlean/text/utf8/case.c \
+	../sqlean/text/utf8/rune.c \
+	../sqlean/text/utf8/utf8.c
 
 # Include paths
 LOCAL_C_INCLUDES += \
@@ -84,12 +93,16 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/../usearch/include \
 	$(LOCAL_PATH)/../usearch/stringzilla/include \
 	$(LOCAL_PATH)/../usearch/simsimd/include \
-	$(LOCAL_PATH)/../usearch/fp16/include
+	$(LOCAL_PATH)/../usearch/fp16/include \
+	$(LOCAL_PATH)/../sqlean \
+	$(LOCAL_PATH)/../sqlean/uuid \
+	$(LOCAL_PATH)/../sqlean/text \
+	$(LOCAL_PATH)/../sqlean/text/utf8
 
 # Export include path so usearch can find sqlite3ext.h
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 
-LOCAL_MODULE := libsqlite3x
+LOCAL_MODULE := libsqlite3
 LOCAL_LDLIBS += -ldl -llog -latomic
 
 include $(BUILD_SHARED_LIBRARY)

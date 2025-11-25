@@ -14,7 +14,6 @@ let package = Package(
         .library(name: "GRDB", targets: ["GRDB"]),
         .library(name: "SQLiteExtensions", targets: ["SQLiteExtensions"]),
         .library(name: "SQLiteData", targets: ["SQLiteData"]),
-        .library(name: "USearchExtension", targets: ["USearchExtension"])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-collections", from: "1.0.0"),
@@ -59,6 +58,7 @@ let package = Package(
 				.define("SQLITE_HAVE_MALLOC_USABLE_SIZE"),
                 .define("SQLITE_HAVE_STRCHRNUL"),
                 .define("SQLITE_ENABLE_GEOPOLY"),
+                .define("SQLITE_STAT4_SAMPLES", to: "64"),
                 .define("NDEBUG", .when(configuration: .release)),
                 .unsafeFlags(["-Wno-ambiguous-macro", "-O3"])
             ],
@@ -78,13 +78,42 @@ let package = Package(
         ),
         .target(
             name: "SQLiteExtensions",
-            dependencies: ["GRDBSQLite", "USearchExtension"],
+            dependencies: ["GRDBSQLite"],
             path: "Sources/SQLiteExtensions",
+            exclude: ["sqlean/LICENSE", "usearch/LICENSE", "usearch/stringzilla/LICENSE", "usearch/simsimd/LICENSE", "usearch/fp16/LICENSE"],
+            sources: [
+                "initialize-extensions.c",
+                "sqlean/sqlite3-uuid.c",
+                "sqlean/uuid/extension.c",
+                "sqlean/sqlite3-text.c",
+                "sqlean/text/bstring.c",
+                "sqlean/text/rstring.c",
+                "sqlean/text/runes.c",
+                "sqlean/text/utf8/case.c",
+                "sqlean/text/utf8/rune.c",
+                "sqlean/text/utf8/utf8.c",
+                "usearch/lib.cpp",
+            ],
             publicHeadersPath: "include",
             cSettings: [
+                .headerSearchPath("sqlean"),
+                .headerSearchPath("sqlean/uuid"),
+                .headerSearchPath("sqlean/text"),
+                .headerSearchPath("sqlean/text/utf8"),
                 .define("SQLITE_CORE"),
                 .unsafeFlags(["-O3"])
             ],
+            cxxSettings: [
+                .headerSearchPath("include"),
+                .headerSearchPath("usearch/include"),
+                .headerSearchPath("usearch/stringzilla/include"),
+                .headerSearchPath("usearch/simsimd/include"),
+                .headerSearchPath("usearch/fp16/include"),
+                .define("SQLITE_CORE"),
+                .define("USEARCH_USE_SIMSIMD"),
+                .define("USEARCH_USE_FP16LIB"),
+                .unsafeFlags(["-O3", "-ffast-math"]),
+            ]
         ),
         .target(
             name: "SQLiteData",
@@ -99,30 +128,7 @@ let package = Package(
             ],
             path: "Sources/SQLiteData",
             exclude: ["LICENSE"],
-            swiftSettings: [
-                .define("SQLITE_ENABLE_SNAPSHOT"),
-                .define("SQLITE_ENABLE_FTS5"),
-                .define("SQLITE_ENABLE_PREUPDATE_HOOK"),
-                .unsafeFlags(["-O"])
-            ]
-        ),
-        .target(
-            name: "USearchExtension",
-            dependencies: ["GRDBSQLite"],
-            path: "Sources/USearchExtension",
-            exclude: ["LICENSE", "stringzilla/LICENSE", "simsimd/LICENSE", "fp16/LICENSE"],
-            sources: ["lib.cpp"],
-            publicHeadersPath: "include",
-            cxxSettings: [
-                .headerSearchPath("include"),
-                .headerSearchPath("stringzilla/include"),
-                .headerSearchPath("simsimd/include"),
-                .headerSearchPath("fp16/include"),
-                .define("SQLITE_CORE"),
-                .define("USEARCH_USE_SIMSIMD"),
-                .define("USEARCH_USE_FP16LIB"),
-                .unsafeFlags(["-Ofast"]),
-            ]
+            swiftSettings: [.unsafeFlags(["-O"])]
         )
     ],
     cLanguageStandard: .c11,

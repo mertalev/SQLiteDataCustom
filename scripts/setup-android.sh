@@ -23,6 +23,7 @@ rm -rf "$ANDROID_DIR/.git"
 JNI_DIR="$ANDROID_DIR/sqlite-android/src/main/jni"
 SQLITE_DIR="$JNI_DIR/sqlite"
 USEARCH_DIR="$JNI_DIR/usearch"
+SQLEAN_DIR="$JNI_DIR/sqlean"
 
 # Copy SQLite source files
 echo "Copying SQLite source files..."
@@ -34,12 +35,18 @@ cp "$ROOT_DIR/Sources/SQLiteCustom/sqlite3ext.h" "$SQLITE_DIR/"
 echo "Copying USearch extension..."
 rm -rf "$USEARCH_DIR"
 mkdir -p "$USEARCH_DIR"
-cp -r "$ROOT_DIR/Sources/USearchExtension/include" "$USEARCH_DIR/"
-cp -r "$ROOT_DIR/Sources/USearchExtension/stringzilla" "$USEARCH_DIR/"
-cp -r "$ROOT_DIR/Sources/USearchExtension/simsimd" "$USEARCH_DIR/"
-cp -r "$ROOT_DIR/Sources/USearchExtension/fp16" "$USEARCH_DIR/"
-cp "$ROOT_DIR/Sources/USearchExtension/lib.cpp" "$USEARCH_DIR/"
-cp "$ROOT_DIR/Sources/USearchExtension/LICENSE" "$USEARCH_DIR/"
+cp -r "$ROOT_DIR/Sources/SQLiteExtensions/usearch/include" "$USEARCH_DIR/"
+cp -r "$ROOT_DIR/Sources/SQLiteExtensions/usearch/stringzilla" "$USEARCH_DIR/"
+cp -r "$ROOT_DIR/Sources/SQLiteExtensions/usearch/simsimd" "$USEARCH_DIR/"
+cp -r "$ROOT_DIR/Sources/SQLiteExtensions/usearch/fp16" "$USEARCH_DIR/"
+cp "$ROOT_DIR/Sources/SQLiteExtensions/usearch/lib.cpp" "$USEARCH_DIR/"
+cp "$ROOT_DIR/Sources/SQLiteExtensions/usearch/LICENSE" "$USEARCH_DIR/"
+
+# Copy SQLean extensions (uuid and text)
+echo "Copying SQLean extensions..."
+rm -rf "$SQLEAN_DIR"
+mkdir -p "$SQLEAN_DIR"
+cp -r "$ROOT_DIR/Sources/SQLiteExtensions/sqlean/"* "$SQLEAN_DIR/"
 
 # Copy build configuration files from templates
 echo "Copying build configuration files..."
@@ -47,8 +54,8 @@ cp "$TEMPLATE_DIR/Application.mk" "$JNI_DIR/"
 cp "$TEMPLATE_DIR/Android.mk" "$JNI_DIR/"
 cp "$TEMPLATE_DIR/sqlite/Android.mk" "$SQLITE_DIR/"
 
-# Patch android_database_SQLiteConnection.cpp to register USearch extension
-echo "Patching SQLiteConnection for USearch extension..."
+# Patch android_database_SQLiteConnection.cpp to register extensions
+echo "Patching SQLiteConnection for extensions..."
 CONNECTION_FILE="$SQLITE_DIR/android_database_SQLiteConnection.cpp"
 
 if grep -q "sqlite3_usearch_sqlite_init" "$CONNECTION_FILE"; then
@@ -60,6 +67,10 @@ else
         print ""
         print "// USearch extension init function (defined in usearch/lib.cpp)"
         print "extern \"C\" int sqlite3_usearch_sqlite_init(sqlite3*, char**, const sqlite3_api_routines*);"
+        print ""
+        print "// SQLean extension init functions (defined in sqlean/)"
+        print "extern \"C\" int sqlite3_uuid_init(sqlite3*, char**, const sqlite3_api_routines*);"
+        print "extern \"C\" int sqlite3_text_init(sqlite3*, char**, const sqlite3_api_routines*);"
         next
     }
     /android::gpJavaVM = vm;/ {
@@ -67,8 +78,10 @@ else
         getline
         print
         print ""
-        print "  // Register USearch extension to be auto-loaded for all connections"
+        print "  // Register extensions to be auto-loaded for all connections"
         print "  sqlite3_auto_extension((void(*)(void))sqlite3_usearch_sqlite_init);"
+        print "  sqlite3_auto_extension((void(*)(void))sqlite3_uuid_init);"
+        print "  sqlite3_auto_extension((void(*)(void))sqlite3_text_init);"
         next
     }
     { print }
