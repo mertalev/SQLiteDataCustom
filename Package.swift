@@ -109,7 +109,7 @@ let package = Package(
             dependencies: ["GRDBSQLite"],
             path: "Sources/USearchExtension",
             exclude: ["LICENSE", "stringzilla/LICENSE", "simsimd/LICENSE", "fp16/LICENSE"],
-            sources: ["lib.cpp", "stringzilla/c/lib.c"],
+            sources: ["lib.cpp"],
             publicHeadersPath: "include",
             cxxSettings: [
                 .headerSearchPath("include"),
