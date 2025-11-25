@@ -18,7 +18,6 @@ sqlite_flags := \
 	-DSQLITE_LIKE_DOESNT_MATCH_BLOBS \
 	-DSQLITE_MAX_EXPR_DEPTH=0 \
 	-DSQLITE_OMIT_SHARED_CACHE \
-	-DSQLITE_OMIT_AUTHORIZATION \
 	-DSQLITE_USE_ALLOCA \
 	-DSQLITE_OMIT_AUTOINIT \
 	-DSQLITE_TEMP_STORE=2 \
@@ -59,7 +58,9 @@ endif
 usearch_flags := \
 	-DSQLITE_CORE \
 	-DUSEARCH_USE_SIMSIMD \
-	-DUSEARCH_USE_FP16LIB
+	-DUSEARCH_USE_FP16LIB \
+	-O3 \
+	-ffast-math
 
 LOCAL_CPPFLAGS += $(usearch_flags)
 
@@ -88,7 +89,7 @@ LOCAL_C_INCLUDES += \
 # Export include path so usearch can find sqlite3ext.h
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 
-LOCAL_MODULE := libsqlite3
+LOCAL_MODULE := libsqlite3x
 LOCAL_LDLIBS += -ldl -llog -latomic
 
 include $(BUILD_SHARED_LIBRARY)

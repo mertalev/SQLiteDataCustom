@@ -42,7 +42,6 @@ let package = Package(
                 .define("SQLITE_MAX_EXPR_DEPTH", to: "0"),
                 .define("SQLITE_OMIT_PROGRESS_CALLBACK"),
                 .define("SQLITE_OMIT_SHARED_CACHE"),
-                .define("SQLITE_OMIT_AUTHORIZATION"),
                 .define("SQLITE_USE_ALLOCA"),
                 .define("SQLITE_OMIT_AUTOINIT"),
                 .define("SQLITE_OMIT_DEPRECATED"),
@@ -54,16 +53,14 @@ let package = Package(
                 .define("SQLITE_ENABLE_PERCENTILE"),
                 .define("SQLITE_ENABLE_MATH_FUNCTIONS"),
                 .define("SQLITE_UNTESTABLE"),
-				.define("SQLITE_OMIT_TRACE"),
                 .define("SQLITE_OMIT_TCL_VARIABLE"),
                 .define("SQLITE_HAVE_ISNAN"),
                 .define("SQLITE_HAVE_LOCALTIME_R"),
-				.define("SQLITE_HAVE_LOCALTIME_S"),
 				.define("SQLITE_HAVE_MALLOC_USABLE_SIZE"),
                 .define("SQLITE_HAVE_STRCHRNUL"),
                 .define("SQLITE_ENABLE_GEOPOLY"),
                 .define("NDEBUG", .when(configuration: .release)),
-                .unsafeFlags(["-Wno-ambiguous-macro"])
+                .unsafeFlags(["-Wno-ambiguous-macro", "-O3"])
             ],
         ),
         .target(
@@ -75,7 +72,8 @@ let package = Package(
                 .define("SQLITE_ENABLE_SNAPSHOT"),
                 .define("SQLITE_ENABLE_FTS5"),
                 .define("SQLITE_ENABLE_PREUPDATE_HOOK"),
-                .define("GRDBCUSTOMSQLITE")
+                .define("GRDBCUSTOMSQLITE"),
+                .unsafeFlags(["-O"])
             ]
         ),
         .target(
@@ -83,7 +81,10 @@ let package = Package(
             dependencies: ["GRDBSQLite", "USearchExtension"],
             path: "Sources/SQLiteExtensions",
             publicHeadersPath: "include",
-            cSettings: [.define("SQLITE_CORE")]
+            cSettings: [
+                .define("SQLITE_CORE"),
+                .unsafeFlags(["-O3"])
+            ],
         ),
         .target(
             name: "SQLiteData",
@@ -101,7 +102,8 @@ let package = Package(
             swiftSettings: [
                 .define("SQLITE_ENABLE_SNAPSHOT"),
                 .define("SQLITE_ENABLE_FTS5"),
-                .define("SQLITE_ENABLE_PREUPDATE_HOOK")
+                .define("SQLITE_ENABLE_PREUPDATE_HOOK"),
+                .unsafeFlags(["-O"])
             ]
         ),
         .target(
@@ -118,7 +120,8 @@ let package = Package(
                 .headerSearchPath("fp16/include"),
                 .define("SQLITE_CORE"),
                 .define("USEARCH_USE_SIMSIMD"),
-                .define("USEARCH_USE_FP16LIB")
+                .define("USEARCH_USE_FP16LIB"),
+                .unsafeFlags(["-Ofast"]),
             ]
         )
     ],
