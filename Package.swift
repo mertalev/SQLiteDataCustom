@@ -83,7 +83,7 @@ let package = Package(
             dependencies: ["GRDBSQLite", "USearchExtension"],
             path: "Sources/SQLiteExtensions",
             publicHeadersPath: "include",
-            cSettings: [.define("SQLITE_CORE", to: "1")]
+            cSettings: [.define("SQLITE_CORE")]
         ),
         .target(
             name: "SQLiteData",
@@ -117,8 +117,8 @@ let package = Package(
                 .headerSearchPath("simsimd/include"),
                 .headerSearchPath("fp16/include"),
                 .define("SQLITE_CORE"),
-                .define("USEARCH_USE_SIMSIMD", to: "1"),
-                .define("USEARCH_USE_FP16LIB", to: "1")
+                .define("USEARCH_USE_SIMSIMD"),
+                .define("USEARCH_USE_FP16LIB")
             ]
         )
     ],
