@@ -42,7 +42,6 @@ let package = Package(
                 .define("SQLITE_OMIT_PROGRESS_CALLBACK"),
                 .define("SQLITE_OMIT_SHARED_CACHE"),
                 .define("SQLITE_USE_ALLOCA"),
-                .define("SQLITE_OMIT_AUTOINIT"),
                 .define("SQLITE_OMIT_DEPRECATED"),
                 .define("SQLITE_TEMP_STORE", to: "2"),
                 .define("SQLITE_ENABLE_STAT4"),
