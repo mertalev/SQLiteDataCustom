@@ -92,6 +92,7 @@ let package = Package(
                 "sqlean/sqlite3-uuid.c",
                 "sqlean/uuid/extension.c",
                 "sqlean/sqlite3-text.c",
+                "sqlean/text/extension.c",
                 "sqlean/text/bstring.c",
                 "sqlean/text/rstring.c",
                 "sqlean/text/runes.c",
