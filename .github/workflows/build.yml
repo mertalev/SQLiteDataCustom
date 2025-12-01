@@ -1,0 +1,39 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup sources
+        run: scripts/setup.sh
+
+      - name: Build AAR
+        working-directory: sqlite-android-custom
+        run: ./gradlew :sqlite-android:assembleRelease
+
+      - name: Upload AAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: sqlite-android-release
+          path: sqlite-android-custom/sqlite-android/build/outputs/aar/sqlite-android-release.aar
